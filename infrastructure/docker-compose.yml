@@ -1,0 +1,39 @@
+# Run from the repository root:
+#   docker compose -f infrastructure/docker-compose.yml up --build
+# Each service reads its own .env.local. Inside containers, DATABASE_URL must use
+# a host the container can reach, not localhost.
+name: plumarc
+
+services:
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../infrastructure/frontend.Dockerfile
+    env_file: ../frontend/.env.local
+    environment:
+      API_URL: http://backend:8000
+    # The only published port. Point Cloudflare Tunnel here.
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on: [backend]
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ..
+      dockerfile: infrastructure/python.Dockerfile
+      args: { SERVICE: backend, PORT: 8000 }
+    env_file: ../backend/.env.local
+    environment:
+      AUTH_URL: http://auth:8001
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on: [auth]
+    restart: unless-stopped
+
+  auth:
+    build:
+      context: ..
+      dockerfile: infrastructure/python.Dockerfile
+      args: { SERVICE: auth, PORT: 8001 }
+    env_file: ../auth/.env.local
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: unless-stopped

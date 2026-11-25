@@ -2,8 +2,8 @@
 
 # dependencies
 /docs
-/node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -12,14 +12,20 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build/
+
+# python
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
 
 # misc
 .DS_Store
@@ -31,8 +37,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files: only the examples are committed
 .env*
+!.env.example
 
 # vercel
 .vercel

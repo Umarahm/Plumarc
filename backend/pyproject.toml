@@ -1,0 +1,31 @@
+[project]
+name = "plumarc-backend"
+version = "0.1.0"
+description = "Plumarc API"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "plumarc-shared",
+    "pydantic-settings>=2.5",
+    "uvicorn>=0.30",
+]
+
+[dependency-groups]
+dev = ["plumarc-shared[testing]", "pytest>=8", "ruff>=0.8"]
+
+[tool.uv.sources]
+plumarc-shared = { path = "../shared", editable = true }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+# B008: FastAPI's Depends() in defaults. S101: pytest assertions.
+ignore = ["B008"]
+per-file-ignores = { "tests/*" = ["S101", "S105", "S106", "S608"] }

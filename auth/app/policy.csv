@@ -1,0 +1,9 @@
+p, customer, documents:list
+p, intern, documents:list
+p, employee, documents:list
+p, manager, documents:list
+p, hr, documents:list
+p, admin, documents:list
+p, admin, organization:manage
+p, platform_admin, organization:manage
+p, platform_admin, platform:manage

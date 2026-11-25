@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      # Placeholders so the build can run. They are not credentials.
+      AUTH0_DOMAIN: tenant.example.auth0.com
+      AUTH0_CLIENT_ID: ci
+      AUTH0_CLIENT_SECRET: ci
+      AUTH0_SECRET: "0000000000000000000000000000000000000000000000000000000000000000"
+      APP_BASE_URL: http://localhost:3000
+      API_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [auth, backend]
+    defaults:
+      run:
+        working-directory: ${{ matrix.service }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.29"
+      - run: uv sync --locked
+      - run: uv run ruff check . ../shared
+      - run: uv run ruff format --check . ../shared
+      - run: uv run pytest
