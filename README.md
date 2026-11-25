@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plumarc
 
-## Getting Started
+A security-first AI knowledge gateway for companies: role-aware answers with citations, guarded tool access, and evaluation gates before every release.
 
-First, run the development server:
+> **Status:** early development. The repository holds the Next.js and shadcn/ui scaffold. The features below are planned and documented, not yet built.
+
+## Planned features
+
+- OAuth sign-in, role-based and document-level access, multi-tenant isolation
+- Hybrid RAG with reranking, source citations and abstention
+- Prompt injection and jailbreak detection, PII redaction
+- Document approval, versioning and poisoning detection
+- Free-tier model routing and permission-aware semantic caching
+- MCP tools with independent authorization and human approval
+- Durable background workflows with Inngest
+- Tracing, audit logs, evaluation suites and CI release gates
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Web (installed) | Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui |
+| Backend | Python, FastAPI |
+| Data and auth | Self-hosted Supabase, PostgreSQL, pgvector, RLS, Casbin |
+| Workflows | Inngest |
+| AI | LiteLLM, Groq, OpenRouter, BGE-small, FlashRank |
+| Security | DeBERTa injection classifier, Prompt Guard 2, Presidio |
+| Tools | MCP Python SDK |
+| Quality | Pytest, Promptfoo, Ragas, k6 |
+| Operations | OpenTelemetry, Docker Compose, Cloudflare, GitHub Actions |
+
+Details and reasons: [docs/TECH_STACK.md](docs/TECH_STACK.md).
+
+## Getting started
+
+Requires Node.js 20.9 or later.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Lint |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Documentation
 
-## Learn More
+| Document | Contents |
+|---|---|
+| [Project info](docs/INFO.md) | Overview, demo scenarios, limits, glossary |
+| [PRD](docs/PRD.md) | Problem, users, scope, success metrics |
+| [Requirements](docs/REQUIREMENTS.md) | Functional, non-functional, permissions, evaluation set |
+| [Specification](docs/SPEC.md) | Architecture, data model, pipelines, APIs |
+| [Tech stack](docs/TECH_STACK.md) | Technologies, status, costs, risks |
+| [Roadmap](docs/ROADMAP.md) | 20 steps over 12 weeks |
 
-To learn more about Next.js, take a look at the following resources:
+## Security note
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use synthetic data only. Plumarc aims to minimize hallucination and injection risk; it cannot guarantee their absence.
